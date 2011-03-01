@@ -178,6 +178,8 @@ class HTTPError(HTTPResponse):
         super(HTTPError, self).__init__(output, code, header)
         self.exception = exception
         self.traceback = traceback
+        if DEBUG >= 2:
+            print self.traceback
 
     def __repr__(self):
         return template(ERROR_PAGE_TEMPLATE, e=self)
@@ -1223,11 +1225,13 @@ def static_file(filename, root, guessmime=True, mimetype=None, download=False):
 # HTTP Utilities and MISC (TODO) ###############################################
 ###############################################################################
 
-def debug(mode=True):
+def debug(mode=1):
     """ Change the debug level.
-    There is only one debug level supported at the moment."""
+    0: Debug off
+    1: Normal debug
+    2: Console output"""
     global DEBUG
-    DEBUG = bool(mode)
+    DEBUG = int(mode)
 
 
 def parse_date(ims):
@@ -2175,7 +2179,7 @@ simpletal_view = functools.partial(view, template_adapter=SimpleTALTemplate)
 
 TEMPLATE_PATH = ['./', './views/']
 TEMPLATES = {}
-DEBUG = False
+DEBUG = 0
 MEMFILE_MAX = 1024*100
 
 #: A dict to map HTTP status codes (e.g. 404) to phrases (e.g. 'Not Found')
